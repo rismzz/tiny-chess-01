@@ -1,11 +1,19 @@
-# STATUS — tiny-chess-01 (belum disubmit)
+# STATUS — tiny-chess-01 round 3 (siap submit)
 
-Syarat (2026-11-16): main.py ≤4.096 B, repo ≤8.192 B, file ≤4.096 B; Python 3.13 stdlib; model call = DQ; main.py mandiri (tak membaca file repo lain). Protokol HTTP POST JSON ke MAKEFUN_ENV_URL: /game {} → status; /move {"game":n,"move":"e2e4"}. Trial 8 game vs engine rumah deterministik, opening buku 8 ply; langkah ≤10.000 ms; trial ≤1.800 dtk; skor Elo ML vs jangkar, lantai latihan 1.154; replay penantang byte-identik → search node-tetap. Akhir: mat/stalemate/materi kurang/3× ulang/100 ply/adjudikasi 200 ply (≥5 menang). Crash = kalah game berjalan + sisa. $500/20 tempat, gratis, tutup 2026-11-24T17:00:00Z, maks 5 submit/hari, 10 total.
+Syarat: main.py ≤4.096 B, tree ≤8.192 B, Python 3.13 stdlib, main.py mandiri (tak baca file repo lain). Trial vs gauntlet rumah; langkah ≤10.000 ms; trial ≤1.800 dtk; lantai practice 1.154; replay penantang byte-identik (search node-tetap, tanpa jam). Tutup 2026-11-24T17:00Z, maks 5 submit/hari, 10 total. $500/20 tempat.
 
-Engine original: papan 0x88; negamax alpha-beta + PVS + LMR + null-move + TT; quiescence menyatu (tangkapan+promosi, evasi penuh saat skak); eval material 100/320/330/500/900 + PST digit-string + raja tapered MG/EG, inkremental; budget 50.000 node. Driver retry + fallback langkah legal (anti-abandon). main.py = blob lzma+base85 dari source 7.249 B (di-minify); source di scratch-tiny-chess/engine_src.py. Jangan re-pack main.py ini (double-pack 4.405 B).
+Round 2 DITOLAK practice_floor: skor 1.099 < 1.154. Trial-0 lokal round 2: W2 D0 L4 = 2,0 poin (depth-2 W, depth-3 W, sisanya L).
 
-Uji (mock + wasit penuh, build final): test_engine ALL OK — perft 20/400/8902, Kiwipete 48/2039/97862, suite 14/191/2812 & 6/264/9467; konsistensi hash/eval ✓; mate-in-1 ✓. Match: greedy 1/1, AB depth-2 3/3, AB depth-3 2/2 (semua skakmat); pra-golf 16/16. 0 ilegal, 0 crash, exit 0; maks 2,25 dtk, rerata ~1,4 dtk. Determinisme: 2 run identik persis ✓.
+Perubahan round 3 (ditulis di sesi ini ke engine_src.py, 10.057 B):
+- Killer moves (2/ply) + history heuristic di move ordering.
+- Bishop pair +30; PST pion: pion rank 7/6 bonus lebih besar.
+- Anggaran node 50.000 → 80.000; killer/history direset tiap bm() agar deterministik.
 
-Ukuran: main.py 4.070, LICENSE 1.108, README 1.041, owner.json 57, STATUS ini; total <8.192 B.
+Uji lokal (env asli kit, tanpa artefak):
+- Perft eksak: startpos d3 8902, kiwipete d3 97862, pos3 2812, pos4 9467. Mate-in-1 ✓, determinisme 2 run identik ✓.
+- Trial-0 round 3: W4 D1 L1 = 4,5 poin → Elo practice ~1.545 (lantai 1.154). depth-2 W, depth-3 W, depth-4 W, nodes-100k L, nodes-250k W, nodes-500k D (threefold).
+- Trial-1 (validasi, instance lain): W5 D0 L1 = 5,0 poin → Elo ~1.654 (hanya kalah dari nodes-500k). Rerata 2 trial ~1.600.
+- Mock match: 4-0 semua checkmate (greedy 2x, ab2 2x); 0 bad request; langkah maks 3,31 dtk, rerata 2,51 dtk.
+- Ukuran: main.py 4.003 B (kit compress resmi, sha256 d3226d75…), tree ~7,6 kB.
 
-Sisa submit: (1) repo GitHub publik dibuat >2026-11-10T17:00:00Z (CLI belum login) + commit SHA-40; ganti OWNER/REPO di README; About repo. (2) Recording kit (record dulu) + bundle transkrip + makefun-run.json. (3) Submit via API; klaim ke wallet di owner.json.
+Sisa submit (parent): commit main.py + STATUS ini (engine_src.py tetap uncommitted di folder repo); bundle transkrip sesi pembangun (builder r1/r2, fixer, improver ini, top-level); submit round 3 sebelum 2026-11-25 00:00 WIB.
